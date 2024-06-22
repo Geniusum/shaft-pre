@@ -1,0 +1,5 @@
+var (const decimal) pi = 3.1415926535;
+func area(decimal radius) decimal {
+    return pi * (radius ^ 2);
+}
+log("Area of a 24cm radius circle :", area(24));

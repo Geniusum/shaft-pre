@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shaft</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="assets/favicon.png" type="image/x-icon">
+</head>
+
+<body>
+    <div id="scrollable-content">
+        <div class="navbar">
+            <div class="centered">
+                <d class="bold" style="font-size: 20px; margin-top: -2px; margin-right: 20px;"><a href="." style="color: white; text-decoration: none; margin: 0px; padding: 0px;">Shaft</a></d>
+                <a href="#" class="l">Download</a>
+                <a href="#" class="l">Documentations</a>
+                <a href="#" class="l">Examples</a>
+                <a href="#" class="l">Packages</a>
+                <a href="https://mazegroup.org/" class="l">By MazeGroup</a>
+            </div>
+        </div>
+        <img class="backfill" id="bf1_large" src="assets/backfill1_l.svg" alt="Shaft">
+        <img class="backfill" id="bf1_mobile" src="assets/backfill1_m.svg" alt="Shaft">
+        <h1 class="giant-title">The futur of programming,<br>a modern language</h1>
+        <hr class="little">
+        <br>
+        <div class="gray">
+            <div style="text-align: center;">
+                <h1 class="giant-title mono bold">A powerful language used for</h1>
+                <h1 class="giant-title mono light">UI design</h1>
+                <h1 class="giant-title mono light">Web SaaS</h1>
+                <h1 class="giant-title mono light">Data science</h1>
+                <h1 class="giant-title mono light" style="background: -webkit-linear-gradient(#1F1F1D, #F5F5F7 85%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">And more...</h1>
+            </div>
+        </div>
+        <br>
+        <h1 class="giant-title mono bold">Example of code :</h1>
+        <div class="gray">
+            <div class="code-snippet">
+                <code-ins>var</code-ins> <code-op>(</code-op><code-ins>const</code-ins> <code-ins>decimal</code-ins><code-op>)</code-op> pi <code-op>=</code-op> 3.1415926535<code-op>;</code-op><br>
+                <code-ins>func</code-ins> area<code-op>(</code-op><code-ins>decimal</code-ins> radius<code-op>)</code-op> <code-ins>decimal</code-ins> <code-op>{</code-op><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return pi <code-op>*</code-op> <code-op>(</code-op>radius <code-op>^</code-op> 2<code-op>)</code-op><code-op>;</code-op><br>
+                <code-op>}</code-op><br>
+                log<code-op>(</code-op><code-op>"Area of a 24cm radius circle :", </code-op>area<code-op>(</code-op>24<code-op>)</code-op><code-op>);</code-op>
+            </div>
+            <br>
+            <div class="code-desc">
+                <hr>
+                This program calculate the area of a circle.
+            </div>
+        </div>        
+        <footer>
+            <p style="text-align: center; width: 100%;">2024 - MazeGroup</p>
+        </footer>
+    </div>
+
+    <script>
+        const container = document.querySelector('#scrollable-content');
+
+        let startY;
+        let startX;
+        let scrollTop;
+        let scrollLeft;
+        let isDown;
+        let isDragging = false;
+        let momentumY = 0;
+        let lastTimestamp = 0;
+
+        container.addEventListener('mousedown', e => mouseIsDown(e));
+        container.addEventListener('mouseup', e => mouseUp(e));
+        container.addEventListener('mouseleave', e => mouseLeave(e));
+        container.addEventListener('mousemove', e => mouseMove(e));
+        container.addEventListener('touchstart', e => touchStart(e));
+        container.addEventListener('touchmove', e => touchMove(e));
+        container.addEventListener('touchend', e => touchEnd(e));
+
+        function mouseIsDown(e) {
+            isDown = true;
+            startY = e.pageY - container.offsetTop;
+            scrollLeft = container.scrollLeft;
+            scrollTop = container.scrollTop;
+        }
+        function mouseUp(e) {
+            isDown = false;
+            isDragging = false;
+            momentumScroll();
+        }
+        function mouseLeave(e) {
+            isDown = false;
+            isDragging = false;
+            momentumScroll();
+        }
+        function mouseMove(e) {
+            if (isDown) {
+                e.preventDefault();
+                isDragging = true;
+                const y = e.pageY - container.offsetTop;
+                const walkY = y - startY;
+                container.scrollTop = scrollTop - walkY;
+            }
+        }
+
+        function touchStart(e) {
+            isDown = true;
+            startY = e.touches[0].pageY - container.offsetTop;
+            scrollLeft = container.scrollLeft;
+            scrollTop = container.scrollTop;
+            lastTimestamp = performance.now();
+            momentumY = 0;
+        }
+
+        function touchMove(e) {
+            if (isDown) {
+                e.preventDefault();
+                isDragging = true;
+                const y = e.touches[0].pageY - container.offsetTop;
+                const walkY = y - startY;
+                container.scrollTop = scrollTop - walkY;
+                const timestamp = performance.now();
+                const deltaTime = timestamp - lastTimestamp;
+                const deltaY = walkY - momentumY;
+                momentumY += deltaY;
+                lastTimestamp = timestamp;
+            }
+        }
+
+        function touchEnd(e) {
+            isDown = false;
+            momentumScroll();
+        }
+
+        function momentumScroll() {
+            if (isDragging) {
+                requestAnimationFrame(momentumScroll);
+            } else {
+                momentumY *= 0.95; // Augmentez le facteur de friction pour ralentir plus rapidement
+                container.scrollTop += momentumY;
+                if (Math.abs(momentumY) < 0.5) {
+                    momentumY = 0;
+                }
+                if (momentumY === 0) {
+                    return;
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
